@@ -114,7 +114,8 @@ public sealed class LearnTagForm : Form
             return;
         }
         var script = _script.SelectedItem as string;
-        if (script is null || !_library.TryResolve(script, out _, out var error))
+        string error = "";
+        if (script is null || !_library.TryResolve(script, out _, out error))
         {
             MessageBox.Show(this, "Pick a valid script" + (script is null ? "." : $" ({error})."), "NFC Desk",
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);

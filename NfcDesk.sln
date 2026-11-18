@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{770C6626
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NfcDesk.Tests", "tests\NfcDesk.Tests\NfcDesk.Tests.csproj", "{761E68DC-E7F0-456E-9620-B4EC5EC37BE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NfcDesk.App", "src\NfcDesk.App\NfcDesk.App.csproj", "{E819FFBD-35D0-4FD9-AE6D-0748176CBC52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +30,14 @@ Global
 		{761E68DC-E7F0-456E-9620-B4EC5EC37BE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{761E68DC-E7F0-456E-9620-B4EC5EC37BE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{761E68DC-E7F0-456E-9620-B4EC5EC37BE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E819FFBD-35D0-4FD9-AE6D-0748176CBC52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E819FFBD-35D0-4FD9-AE6D-0748176CBC52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E819FFBD-35D0-4FD9-AE6D-0748176CBC52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E819FFBD-35D0-4FD9-AE6D-0748176CBC52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CADD793C-75BC-4E9A-B1B9-56DBA48BD1C3} = {DF5428C3-CDAC-4803-A6EC-F289C4048423}
 		{761E68DC-E7F0-456E-9620-B4EC5EC37BE6} = {770C6626-8E96-4FE5-ABAC-24C10015E813}
+		{E819FFBD-35D0-4FD9-AE6D-0748176CBC52} = {DF5428C3-CDAC-4803-A6EC-F289C4048423}
 	EndGlobalSection
 EndGlobal
