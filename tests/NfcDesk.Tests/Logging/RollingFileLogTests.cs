@@ -22,7 +22,7 @@ public class RollingFileLogTests : IDisposable
     {
         using var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
         using var sr = new StreamReader(fs);
-        return sr.ReadToEnd().Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        return sr.ReadToEnd().Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
     }
 
     [Fact]
