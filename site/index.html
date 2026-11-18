@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NFC Desk Agent</title>
+<meta name="description" content="A Windows 11 tray app that runs local scripts when an iPhone taps an NFC tag. Signed HTTP requests over your home Wi-Fi.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Cpath d='M10 9a10 10 0 0 1 0 14M15 11.5a6.5 6.5 0 0 1 0 9M20 14a3 3 0 0 1 0 4' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#ffffff; --bg-alt:#f4f6fa; --fg:#14171f; --muted:#4a5365; --border:#d5dae4;
+  --accent:#1d4ed8; --accent-fg:#ffffff; --code-bg:#eef1f7; --node:#e8eefc; --ok:#146c2e;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1218; --bg-alt:#171b24; --fg:#e8ebf2; --muted:#a6aebf; --border:#2d3443;
+    --accent:#7aa2ff; --accent-fg:#0b1020; --code-bg:#1b2030; --node:#1f2a4a; --ok:#6fd48a;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+header.hero{background:var(--bg-alt);border-bottom:1px solid var(--border);padding:56px 0 48px}
+h1{font-size:clamp(2rem,6vw,3rem);line-height:1.15;margin:0 0 12px}
+h2{font-size:1.5rem;margin:0 0 16px;line-height:1.25}
+h3{font-size:1.05rem;margin:20px 0 8px}
+.lead{font-size:1.15rem;color:var(--muted);max-width:40em;margin:0 0 24px}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:10px 20px;border-radius:8px;border:2px solid var(--accent);text-decoration:none;font-weight:600;color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-fg)}
+.btn:focus-visible,a:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+main section{padding:40px 0;border-bottom:1px solid var(--border)}
+main section:last-child{border-bottom:0}
+a{color:var(--accent)}
+p{margin:0 0 12px}
+ul,ol{padding-left:1.3em;margin:0 0 12px}
+li{margin-bottom:6px}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;overflow-x:auto;margin:0 0 16px;font-size:.9rem;line-height:1.5}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+p code,li code,td code{background:var(--code-bg);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+pre code{background:none;padding:0}
+.diagram{margin:0 0 16px;color:var(--fg)}
+.diagram-v{display:none}.diagram-v svg{max-width:300px;margin:0 auto}
+@media (max-width:600px){.diagram-h{display:none}.diagram-v{display:block}}
+.diagram svg{width:100%;height:auto;display:block;max-width:760px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;list-style:none;padding:0}
+.grid li{background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:0}
+.grid strong{display:block;margin-bottom:4px}
+.tablewrap{overflow-x:auto;margin:0 0 16px}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:.95rem}
+th,td{text-align:left;vertical-align:top;border:1px solid var(--border);padding:8px 10px}
+th{background:var(--bg-alt)}
+footer{background:var(--bg-alt);border-top:1px solid var(--border);padding:24px 0;color:var(--muted);font-size:.95rem}
+footer p{margin:0 0 6px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>NFC Desk Agent</h1>
+    <p class="lead">A Windows 11 tray app that runs local scripts when your iPhone taps an NFC tag. The iPhone sends a signed HTTP request over your home Wi-Fi.</p>
+    <div class="btns">
+      <a class="btn primary" href="https://github.com/muchkurisrivardhan/NFCS">View on GitHub</a>
+      <a class="btn" href="https://github.com/muchkurisrivardhan/NFCS/releases">Releases</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="how" aria-labelledby="how-h">
+  <h2 id="how-h">How it works</h2>
+  <figure class="diagram diagram-h" style="margin:0 0 16px">
+    <svg viewBox="0 0 760 150" role="img" aria-labelledby="dt dd" fill="none" stroke="currentColor" stroke-width="2">
+      <title id="dt">Tap flow</title>
+      <desc id="dd">An iPhone sends a signed POST over Wi-Fi to the tray agent, which verifies the request and runs a script.</desc>
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor" stroke="none"/></marker></defs>
+      <g font-family="system-ui,Segoe UI,sans-serif" font-size="14" text-anchor="middle" fill="currentColor" stroke="none">
+        <rect x="4" y="40" width="130" height="70" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/>
+        <text x="69" y="70">iPhone</text><text x="69" y="90" font-size="12">taps NFC tag</text>
+        <rect x="190" y="40" width="130" height="70" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/>
+        <text x="255" y="70">Wi-Fi POST</text><text x="255" y="90" font-size="12">/tap, signed</text>
+        <rect x="376" y="40" width="130" height="70" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/>
+        <text x="441" y="70">Tray agent</text><text x="441" y="90" font-size="12">on the PC</text>
+        <rect x="562" y="40" width="94" height="70" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/>
+        <text x="609" y="80">Verify</text>
+        <rect x="690" y="40" width="66" height="70" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/>
+        <text x="723" y="80">Script</text>
+      </g>
+      <path d="M136 75H186" marker-end="url(#ah)"/><path d="M322 75H372" marker-end="url(#ah)"/><path d="M508 75H558" marker-end="url(#ah)"/><path d="M658 75H686" marker-end="url(#ah)"/>
+    </svg>
+  </figure>
+  <figure class="diagram diagram-v" style="margin:0 0 16px">
+    <svg viewBox="0 0 300 420" role="img" aria-label="Tap flow: iPhone taps NFC tag, Wi-Fi POST to /tap signed, tray agent on the PC, verify, script." fill="none" stroke="currentColor" stroke-width="2">
+      <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor" stroke="none"/></marker></defs>
+      <g font-family="system-ui,Segoe UI,sans-serif" font-size="16" text-anchor="middle" fill="currentColor" stroke="none">
+        <rect x="50" y="4" width="200" height="56" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/><text x="150" y="29">iPhone</text><text x="150" y="48" font-size="13">taps NFC tag</text>
+        <rect x="50" y="88" width="200" height="56" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/><text x="150" y="113">Wi-Fi POST</text><text x="150" y="132" font-size="13">/tap, signed</text>
+        <rect x="50" y="172" width="200" height="56" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/><text x="150" y="197">Tray agent</text><text x="150" y="216" font-size="13">on the PC</text>
+        <rect x="50" y="256" width="200" height="56" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/><text x="150" y="290">Verify</text>
+        <rect x="50" y="340" width="200" height="56" rx="8" style="fill:var(--node);stroke:currentColor;stroke-width:2"/><text x="150" y="374">Script</text>
+      </g>
+      <path d="M150 62V84" marker-end="url(#ah2)"/><path d="M150 146V168" marker-end="url(#ah2)"/><path d="M150 230V252" marker-end="url(#ah2)"/><path d="M150 314V336" marker-end="url(#ah2)"/>
+    </svg>
+  </figure>
+  <p>The shortcut signs the tag name and a timestamp with a secret you pair once. The agent checks the request in a fixed order and, if it passes, runs the script mapped to that tag from its own library. The request never carries a command, path or arguments.</p>
+</section>
+
+<section id="features" aria-labelledby="feat-h">
+  <h2 id="feat-h">Features</h2>
+  <ul class="grid">
+    <li><strong>Tray app</strong>Open Dashboard, Pair Phone, Pair New Tag, Pause/Resume, Open Script Folder, View Log, Show Notifications, Start with Windows, Quit.</li>
+    <li><strong>Pairing window</strong>A 32-byte random secret as 64 hex characters plus a QR code, the LAN URLs, and Regenerate secret.</li>
+    <li><strong>Learning mode</strong>The next validly signed tap from an unknown tag asks you to pick a script and a label. It ends after 2 minutes or one tag.</li>
+    <li><strong>Script types</strong><code>.ps1</code>, <code>.bat</code>, <code>.cmd</code>, <code>.exe</code>, <code>.lnk</code>, <code>.py</code>. Hidden window, your user rights, 60 s timeout, output in the log (64 KB cap).</li>
+    <li><strong>Starter scripts</strong>start-work-day, focus-mode, lock-pc, media-play-pause, end-of-day.</li>
+    <li><strong>LAN only</strong>Binds to private IPv4 addresses and 127.0.0.1. Default port 8765. Firewall rule for the Private profile only.</li>
+    <li><strong>Local data</strong>Config, DPAPI-encrypted secret, scripts and 14 days of logs under <code>%AppData%\NFCDesk\</code>.</li>
+    <li><strong>Self-contained</strong>A single-file <code>NFCDesk.exe</code>. No .NET install needed on the target PC.</li>
+  </ul>
+</section>
+
+<section id="quickstart" aria-labelledby="qs-h">
+  <h2 id="qs-h">Quick start</h2>
+  <p>Requires the .NET 8 SDK to build. The published exe needs no runtime.</p>
+<pre><code>dotnet build
+dotnet test
+dotnet publish src/NfcDesk.App -c Release -r win-x64 -o publish</code></pre>
+  <p>Run <code>publish\NFCDesk.exe</code>, accept the firewall prompt, then pair:</p>
+  <ol>
+    <li>Tray menu, <strong>Pair Phone</strong>. Note the secret and the URL, such as <code>http://192.168.1.50:8765/tap</code>.</li>
+    <li>In the iPhone shortcut <strong>#50 "NFC · Send Tap to PC"</strong>, paste the secret and URL into the Secret and PC text actions. Set the Tag text, for example <code>desk-focus-01</code>.</li>
+    <li>Shortcuts, Automation, +, NFC, Scan. Choose <strong>Run Immediately</strong> and select the shortcut.</li>
+    <li>On the PC, tray menu, <strong>Pair New Tag (Learning Mode)</strong>.</li>
+    <li>Tap the tag. Pick a script and a label when the agent asks.</li>
+  </ol>
+  <p>Full steps, adding scripts and testing without a phone are in the <a href="https://github.com/muchkurisrivardhan/NFCS#readme">README</a>.</p>
+</section>
+
+<section id="protocol" aria-labelledby="proto-h">
+  <h2 id="proto-h">Protocol</h2>
+  <p>One endpoint: <code>POST http://&lt;pc-lan-ip&gt;:8765/tap</code> with this JSON body.</p>
+<pre><code>{ "tag": "desk-focus-01", "ts": 1763441000, "sig": "&lt;hex sha256&gt;" }</code></pre>
+  <ul>
+    <li><code>tag</code>: matches <code>^[a-z0-9-]{1,64}$</code>.</li>
+    <li><code>ts</code>: Unix time in seconds, UTC.</li>
+    <li><code>sig</code>: lowercase hex of <code>SHA256( tag + "|" + ts + "|" + secret )</code>. The secret is the 64-character hex string from the pairing window.</li>
+  </ul>
+  <h3>Check order</h3>
+  <ol>
+    <li>Source is a LAN address.</li>
+    <li>Body format is exact. Maximum 1 KB.</li>
+    <li><code>|now - ts| &lt;= 30</code> seconds.</li>
+    <li><code>ts</code> is greater than the last accepted <code>ts</code> for this tag.</li>
+    <li>Signature matches (constant-time compare).</li>
+    <li>Tag is registered, or learning mode is on.</li>
+    <li>Agent is not paused.</li>
+  </ol>
+  <p>Requests are also limited to 10 per second per IP.</p>
+  <h3>Responses</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Status</th><th>Body</th></tr>
+    <tr><td>200</td><td><code>{"status":"ok"}</code></td></tr>
+    <tr><td>403</td><td><code>{"status":"denied"}</code>, with no detail. The reason is in the log.</td></tr>
+  </table></div>
+</section>
+
+<section id="security" aria-labelledby="sec-h">
+  <h2 id="sec-h">Security summary</h2>
+  <ul>
+    <li>Signed requests with a secret you pair once; non-LAN sources are rejected.</li>
+    <li>Replay protection: 30 s window plus a per-tag increasing timestamp, saved across restarts.</li>
+    <li>A request only names a tag. Scripts run only from the library folder, with strict path rules.</li>
+    <li>The secret is stored with DPAPI for the current Windows user.</li>
+    <li>No TLS in v1: anyone on your LAN can see tag names and tap times, but not the secret.</li>
+  </ul>
+  <p>See the full <a href="https://github.com/muchkurisrivardhan/NFCS/blob/main/SECURITY.md">threat model and limitations</a>.</p>
+</section>
+
+<section id="troubleshooting" aria-labelledby="ts-h">
+  <h2 id="ts-h">Troubleshooting highlights</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Symptom</th><th>Check</th></tr>
+    <tr><td>iPhone says "PC didn't respond"</td><td>App running, same Wi-Fi, network profile is Private, firewall rule exists, IP in the shortcut is current (reserve it in your router).</td></tr>
+    <tr><td>403 with <code>ClockSkew</code></td><td>PC or phone clock is off by more than 30 s. Sync time.</td></tr>
+    <tr><td>403 with <code>BadSignature</code></td><td>Secret mismatch. Re-copy it with no spaces.</td></tr>
+    <tr><td>403 with <code>UnknownTag</code></td><td>Register the tag with Pair New Tag (Learning Mode).</td></tr>
+    <tr><td>403 with <code>NonLanSource</code></td><td>VPN on the phone, or a guest network with client isolation.</td></tr>
+    <tr><td>Script did not run</td><td>Read its output in the log. Check the path rules.</td></tr>
+    <tr><td>Port in use</td><td>Change <code>port</code> in <code>config.json</code> and the shortcut URL, then restart.</td></tr>
+  </table></div>
+  <p>The log is in <code>%AppData%\NFCDesk\logs\</code> (tray: View Log).</p>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>NFC Desk Agent. <a href="https://github.com/muchkurisrivardhan/NFCS">Source on GitHub</a> · <a href="https://github.com/muchkurisrivardhan/NFCS/releases">Releases</a> · <a href="https://github.com/muchkurisrivardhan/NFCS/blob/main/SECURITY.md">Security</a></p>
+  </div>
+</footer>
+</body>
+</html>
